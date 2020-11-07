@@ -4,8 +4,8 @@ import java.util.*;
 public class EnigmaDevice{
 
     public static void main(String[] args) {
-        System.out.println("Check Rotor line 200 | Check Rotor line 47 (Rotate method in general)");
-        System.out.println("Check switching of letter to capital unintentionally randomly");
+        //System.out.println("Check Rotor line 200 | Check Rotor line 47 (Rotate method in general)");
+        //System.out.println("Check switching of letter to capital unintentionally randomly");
         /*
            Creates the plugboard : Used to switch letters before going through the rotor
            Creates the Rotor : Used to rotate the wheels and will then change the outgoing letter
