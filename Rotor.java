@@ -22,7 +22,7 @@ public class Rotor{
     private int locLeft = 0;
     private int locMiddle = 0;
     private int locRight = 0;
-    public Rotor(int wheelTypeLeft, int locLeft, int wheelTypeMiddle, int locMiddle, int wheelTypeRight, int locRight){
+    public Rotor(int wheelTypeLeft, int LocationLeft, int wheelTypeMiddle, int LocationMiddle, int wheelTypeRight, int LocationRight){
         
         rotorWheel = new Wheel[4];
         wheel1 = new Wheel(wheelTypeLeft);
@@ -30,9 +30,9 @@ public class Rotor{
         wheel3 = new Wheel(wheelTypeRight);
         randWheel = new Wheel(RANDOM);
         //sets the left, middle, and right wheel to locations given by input
-        rotorWheel[locLeft] = wheel1;
-        rotorWheel[locMiddle] = wheel2;
-        rotorWheel[locRight] = wheel3;
+        rotorWheel[LocationLeft] = wheel1;
+        rotorWheel[LocationMiddle] = wheel2;
+        rotorWheel[LocationRight] = wheel3;
         rotorWheel[3] = randWheel;
         outerLeftWheel = rotorWheel[0].getWheel()[0];
         outerMiddleWheel = rotorWheel[1].getWheel()[0];
@@ -48,10 +48,6 @@ public class Rotor{
         //double chance = Math.random();
 
         // checks if the word has mroe than 1 character left
-        boolean large = false;
-        if(word.length() > 1){
-            large = true;
-        }
         //shift all elements of the array for the Left Wheel
         char temp = outerLeftWheel[0]; // temp variable that is used for the first element for each wheel
 
@@ -64,7 +60,7 @@ public class Rotor{
         //
         locLeft ++;
 
-        if(large && word.charAt(0) == word.charAt(1) || locLeft == 12){
+        if(locLeft == 12){
 
             temp = innerLeftWheel[0];
             for(int i = 0; i < innerLeftWheel.length - 1; i ++){
@@ -79,7 +75,7 @@ public class Rotor{
 
         if(locLeft >= 2){
             locMiddle ++;
-
+            locLeft = 0;
             //shifts all elements of the array for the Middle Wheel
 
             temp = outerMiddleWheel[0];
@@ -89,9 +85,8 @@ public class Rotor{
                 outerMiddleWheel[i] = outerMiddleWheel[i+1];
             }
                 outerMiddleWheel[outerMiddleWheel.length - 1] = temp;
-
-            locLeft = 0;
-            if(large && word.charAt(0) == word.charAt(1) || locMiddle == 12){
+            
+            if(locMiddle == 12){
                 temp = innerMiddleWheel[0];
 
                 for(int i = 0; i < innerMiddleWheel.length - 1; i ++){
@@ -100,6 +95,7 @@ public class Rotor{
                 }
                     innerMiddleWheel[innerMiddleWheel.length - 1] = temp;
             }
+            
         }
 
         //If the Middle wheel has gone through an entire rotation shifts the right wheel
@@ -118,7 +114,7 @@ public class Rotor{
             }
 
             outerRightWheel[outerRightWheel.length - 1] = temp;
-            if(large && word.charAt(0) == word.charAt(1) || locRight == 12){
+            if(locRight == 12){
                 temp = innerRightWheel[0];
 
                 for(int i = 0; i < innerRightWheel.length - 1; i ++){

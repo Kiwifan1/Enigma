@@ -1,67 +1,69 @@
 public class Wheel{
-    char[][] Wheel;
+    char[][] Wheel = new char[2][26];
+    String[] WheelType1 = {"EKMFLGDQVZNTOWYHXUSPAIBRCJ","AJDKSIRUXBLHWTMCQGZNPYFVOE"};
+    String[] WheelType2 = {"BDFHJLCPRTXVZNYEIWGAKMUSQO","ESOVPZJAYQUIRHXLNFTGKDCMWB"};
+    String[] WheelType3 = {"VZBRGITYUPSDNHLXAWMJQOFECK","JPGVOUMFYQBENHZRDKASXLICTW"};
+    String[] WheelType4 = {"NZJHGRCXMYSWBOUFAIVLPEKQDT","FKQHTLXOCBJSPDZRAMEWNIUYGV"};
+    String[] Reflector = {"EJMZALYXVBWFCRQUONTSPIKHGD"};
+    String[] WheelType;
     public Wheel(int TypeWheel){
          Wheel = CreateWheel(TypeWheel);
     }
 
     //makes and returns the Wheel based on the input given in constructor
-    public char[][] CreateWheel(int TypeWheel){
-        if(TypeWheel == 0){
-            char[][] Wheel = {{'a', 'b', 'c', 'd','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
-                              {'x','y','z','a','b','c','d','e','f','g','h','o','j','k','l','m','n','o','p','q','r','s','t','u','v','w'}};
-            return Wheel;
+    public char[][] CreateWheel(int WheelChoice){
+        if(WheelChoice == 0) {
+
+            WheelType = WheelType1;
         }
-        else if(TypeWheel == 1){
-            char[][] Wheel = {{'k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j'},
-                              {'g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f'}};
-            
-            return Wheel;
+        else if(WheelChoice == 1) {
+            WheelType = WheelType2;
+        } 
+        else if (WheelChoice == 2) {
+            WheelType = WheelType3;
+        } 
+        else if (WheelChoice == 3) {
+            WheelType = WheelType4;
         }
-        else if(TypeWheel == 2){
-            char[][] Wheel = {{'p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o'},
-                              {'s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r'}};
-            
-            return Wheel;
-        }
-        else if(TypeWheel == 3){
-            char[][] Wheel = {{'m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l'},
-                              {'k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j'}};
-            return Wheel;
+
+        //1942 just as a code for using the reflector
+        else if(WheelChoice == 1942){
+            WheelType = Reflector;
         }
         else{
-            double RandNum = Math.random();
-            //for testing purposes
-            //System.out.println("RandNum : " + RandNum);
-            //
-            if(RandNum <= .25){
-                char[][] Wheel = {{'a', 'b', 'c', 'd','e','f','g','h','o','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
-                                  {'n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m'}};
-            
-                return Wheel;
-            }
-            else if(RandNum <= .5){
-                char[][] Wheel = {{'k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j'},
-                                  {'i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h'}};
-            
-                return Wheel;
-            }
-            else if(RandNum <= .75){
-                char[][] Wheel = {{'p','q','r','s','t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o'},
-                                  {'t','u','v','w','x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s'}};
-            
-                return Wheel;
-            }
-            else{
-                char[][] Wheel = {{'x','y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w'},
-                                  {'y','z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x'}};
-            
-                return Wheel;
-            }  
+            WheelType = WheelType1;
         }
-        
-    }
+
+            int WheelRow = 0;
+            for(String WheelHalf : WheelType){
+                for(int i = 0; i < WheelHalf.length(); i++){
+                    Wheel[WheelRow][i] = WheelHalf.toLowerCase().charAt(i);
+                }
+                WheelRow ++;
+            }
+            return Wheel;
+
+        } 
+               
     //simply returns the wheel that was made
     public char[][] getWheel(){
         return Wheel;
     }
+    /*public int getWheelType(char[][] wheel){
+        if(wheel[0][0] == 'e'){
+            return 1;
+        }
+        else if(wheel[0][0] == 'b'){
+            return 2;
+        }
+        else if(wheel[0][0] == 'v'){
+            return 3;
+        }
+        else if(wheel[0][0] == 'n'){
+            return 4;
+        }
+        else{
+            return 0;
+        }
+    }*/
 }
