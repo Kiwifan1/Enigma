@@ -1,13 +1,46 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.util.Scanner;
+
 public class Wheel{
     char[][] Wheel = new char[2][26];
-    String[] WheelType1 = {"EKMFLGDQVZNTOWYHXUSPAIBRCJ","AJDKSIRUXBLHWTMCQGZNPYFVOE"};
-    String[] WheelType2 = {"BDFHJLCPRTXVZNYEIWGAKMUSQO","ESOVPZJAYQUIRHXLNFTGKDCMWB"};
-    String[] WheelType3 = {"VZBRGITYUPSDNHLXAWMJQOFECK","JPGVOUMFYQBENHZRDKASXLICTW"};
-    String[] WheelType4 = {"NZJHGRCXMYSWBOUFAIVLPEKQDT","FKQHTLXOCBJSPDZRAMEWNIUYGV"};
-    String[] Reflector = {"EJMZALYXVBWFCRQUONTSPIKHGD"};
+
+    String[] WheelType1;
+    String[] WheelType2;
+    String[] WheelType3;
+    String[] WheelType4;
+    String[] reflector;
+
     String[] WheelType;
+    File file;
+    Scanner scanner;
+    
     public Wheel(int TypeWheel){
-         Wheel = CreateWheel(TypeWheel);
+        String filename = "wheels.txt";
+        
+        try {
+            file = new File(filename);
+            scanner = new Scanner(file);
+            String input = scanner.nextLine();
+
+            //wheel creation, some will be chosen, some won't
+            WheelType1 = input.split(" ");
+            input = scanner.nextLine();
+            WheelType2 = input.split(" ");
+            input = scanner.nextLine();
+            WheelType3 = input.split(" ");
+            input = scanner.nextLine();
+            WheelType4 = input.split(" ");
+            input = scanner.nextLine();
+            reflector = input.split(" ");
+
+            Wheel = CreateWheel(TypeWheel);
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println("No file found");
+            e.printStackTrace();
+        }
     }
 
     //makes and returns the Wheel based on the input given in constructor
@@ -28,7 +61,7 @@ public class Wheel{
 
         //1942 just as a code for using the reflector
         else if(WheelChoice == 1942){
-            WheelType = Reflector;
+            WheelType = reflector;
         }
         else{
             WheelType = WheelType1;
@@ -44,26 +77,22 @@ public class Wheel{
             return Wheel;
 
         } 
-               
+
     //simply returns the wheel that was made
     public char[][] getWheel(){
         return Wheel;
     }
-    /*public int getWheelType(char[][] wheel){
-        if(wheel[0][0] == 'e'){
-            return 1;
+
+    public char[] getWheelSide(Direction side){
+        if(side == Direction.LEFT){
+            return Wheel[0];
         }
-        else if(wheel[0][0] == 'b'){
-            return 2;
-        }
-        else if(wheel[0][0] == 'v'){
-            return 3;
-        }
-        else if(wheel[0][0] == 'n'){
-            return 4;
+        else if(side == Direction.RIGHT){
+            return Wheel[1];
         }
         else{
-            return 0;
+            return null;
         }
-    }*/
+    }
+
 }

@@ -1,8 +1,20 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.Scanner;
+
 public class Rotor{
     public static final int LEFT = 1;
     public static final int MIDDLE = 2;
     public static final int RIGHT = 3;
     public static final int RANDOM = 4;
+    public static final int SECRET_ROTATING_NUM = 8; //this number has to be smaller than WHEEL_SHIFTER
+    public static final int WHEEL_SHIFTER = 16;
+
+    //NOTE: to completely replicate the enigma encryption process, each wheel would have its own rotating index and wheel shifter, this can be hardcoded easily and will probably do that later
+
     
     //The entire wheels and the array I put them in
     private Wheel[] rotorWheel;
@@ -22,24 +34,32 @@ public class Rotor{
     private int locLeft = 0;
     private int locMiddle = 0;
     private int locRight = 0;
+    //for overwriting file
+    File file;
+
     public Rotor(int wheelTypeLeft, int LocationLeft, int wheelTypeMiddle, int LocationMiddle, int wheelTypeRight, int LocationRight){
-        
+        String filename = "wheels.txt";
+        file = new File(filename);
+
         rotorWheel = new Wheel[4];
         wheel1 = new Wheel(wheelTypeLeft);
         wheel2 = new Wheel(wheelTypeMiddle);
         wheel3 = new Wheel(wheelTypeRight);
         randWheel = new Wheel(RANDOM);
+
         //sets the left, middle, and right wheel to locations given by input
         rotorWheel[LocationLeft] = wheel1;
         rotorWheel[LocationMiddle] = wheel2;
         rotorWheel[LocationRight] = wheel3;
         rotorWheel[3] = randWheel;
+
         outerLeftWheel = rotorWheel[0].getWheel()[0];
         outerMiddleWheel = rotorWheel[1].getWheel()[0];
         outerRightWheel = rotorWheel[2].getWheel()[0];
         innerLeftWheel = rotorWheel[0].getWheel()[1];
         innerMiddleWheel = rotorWheel[1].getWheel()[1];
         innerRightWheel = rotorWheel[2].getWheel()[1];
+
         reflector = rotorWheel[3].getWheel()[0];
     }
 
@@ -47,7 +67,7 @@ public class Rotor{
     public void Rotate(String word){        
         //double chance = Math.random();
 
-        // checks if the word has mroe than 1 character left
+        // checks if the word has more than 1 character left
         //shift all elements of the array for the Left Wheel
         char temp = outerLeftWheel[0]; // temp variable that is used for the first element for each wheel
 
@@ -60,7 +80,7 @@ public class Rotor{
         //
         locLeft ++;
 
-        if(locLeft == 12){
+        if(locLeft == SECRET_ROTATING_NUM){
 
             temp = innerLeftWheel[0];
             for(int i = 0; i < innerLeftWheel.length - 1; i ++){
@@ -68,12 +88,14 @@ public class Rotor{
                 innerLeftWheel[i] = innerLeftWheel[i+1]; //moves elements to left
     
             }
-                innerLeftWheel[innerLeftWheel.length - 1] = temp; //replaces last element with first
+            innerLeftWheel[innerLeftWheel.length - 1] = temp; //replaces last element with first
+            
         }
+        overwriteWheel(outerLeftWheel, innerLeftWheel);
 
         //If the Left wheel has gone through an entire rotation shifts the middle wheel
 
-        if(locLeft >= 2){
+        if(locLeft >= WHEEL_SHIFTER){
             locMiddle ++;
             locLeft = 0;
             //shifts all elements of the array for the Middle Wheel
@@ -81,26 +103,25 @@ public class Rotor{
             temp = outerMiddleWheel[0];
 
             for(int i = 0; i < outerMiddleWheel.length - 1; i ++){
-
                 outerMiddleWheel[i] = outerMiddleWheel[i+1];
             }
-                outerMiddleWheel[outerMiddleWheel.length - 1] = temp;
-            
-            if(locMiddle == 12){
+
+            outerMiddleWheel[outerMiddleWheel.length - 1] = temp;
+
+            if(locMiddle == SECRET_ROTATING_NUM){
                 temp = innerMiddleWheel[0];
-
                 for(int i = 0; i < innerMiddleWheel.length - 1; i ++){
-
                     innerMiddleWheel[i] = innerMiddleWheel[i+1];
                 }
-                    innerMiddleWheel[innerMiddleWheel.length - 1] = temp;
+                innerMiddleWheel[innerMiddleWheel.length - 1] = temp;
+               
             }
-            
+            overwriteWheel(outerMiddleWheel, innerMiddleWheel);
         }
 
         //If the Middle wheel has gone through an entire rotation shifts the right wheel
 
-        if(locMiddle >= 3){
+        if(locMiddle >= WHEEL_SHIFTER){
 
             locRight ++;
 
@@ -114,7 +135,8 @@ public class Rotor{
             }
 
             outerRightWheel[outerRightWheel.length - 1] = temp;
-            if(locRight == 12){
+
+            if(locRight == SECRET_ROTATING_NUM){
                 temp = innerRightWheel[0];
 
                 for(int i = 0; i < innerRightWheel.length - 1; i ++){
@@ -123,15 +145,62 @@ public class Rotor{
                 }
     
                 innerRightWheel[innerRightWheel.length - 1] = temp;
+                
             }
             locMiddle = 0;
+            overwriteWheel(outerRightWheel, innerRightWheel);
         }
         // simply resets the locRight to 0
-        if(locRight >= 25){
+        if(locRight >= WHEEL_SHIFTER){
 
             locRight = 0;
 
         }
+    }
+
+    public void overwriteWheel(char[] leftArr, char[] rightArr){
+        try {
+
+            BufferedReader file = new BufferedReader(new FileReader("wheels.txt"));
+            StringBuffer inputBuffer = new StringBuffer();
+            String line1;
+            String line2;
+            String leftSide = new String(leftArr).toUpperCase();
+            String rightSide = new String(rightArr).toUpperCase();
+            String correctedLine = "";
+            boolean flag = true;
+
+            file.mark(26);
+            while(flag){
+                if((line1 = file.readLine()).contains(leftSide.substring(1,leftSide.length() - 1)) && flag) {
+                    //(line2 = file.readLine()).contains(rightSide.substring(1, rightSide.length() - 1))
+                    line1 = leftSide;
+                    line2 = rightSide;
+                    correctedLine = line1 + " " + line2 + "\n";        
+                    flag = false;
+                }
+            }
+
+            file.reset();
+            while((line1 = file.readLine()) != null){
+                if(!(line1.contains(leftSide.substring(1, leftSide.length() - 1)))){
+                    inputBuffer.append(line1 + "\n");
+                }
+                else{
+                    inputBuffer.append(correctedLine);
+                }
+            }
+            file.close();
+    
+            FileOutputStream fileOut = new FileOutputStream("wheels.txt");
+            fileOut.write(inputBuffer.toString().getBytes());
+            fileOut.close();
+    
+        } catch (Exception e) {
+            System.out.println("Problem reading file.");
+            e.printStackTrace();
+        }
+        
     }
     
     /**
@@ -202,7 +271,6 @@ public class Rotor{
         }
         //rotates and overwrites encrypted letter
         encrypted = reflector[index];
-        Rotate(word);
 
         index = 0;
         //finds the index of the encrypted letter and changes it to the letter at the same index
