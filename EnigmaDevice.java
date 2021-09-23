@@ -14,9 +14,7 @@ public class EnigmaDevice{
         PlugBoard plugboard = new PlugBoard();
         Scanner input = new Scanner(System.in);
         boolean  playing = true;
-        char[][] alphabet = {{'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
-                             {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}};
-        
+        String alphabet = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";      
         ///CREATING WHEELS AND LOCATIONS///
 
             //The creation of the wheels
@@ -192,7 +190,7 @@ public class EnigmaDevice{
      * @param plugboard A PlugBoard Class for switching the letters
      * @return Returns the encrypted Word
      * */
-    public static String Scrambler(String unEncrypted, Rotor rotor, PlugBoard plugboard, char[][] alphabet){
+    public static String Scrambler(String unEncrypted, Rotor rotor, PlugBoard plugboard, String alphabet){
         String encrypted = "";
         for(int i = 0; i < unEncrypted.length(); i ++){
             char letter = unEncrypted.charAt(i);
@@ -260,19 +258,14 @@ public class EnigmaDevice{
     /**
      * 
      * @param letter The letter that it is checking for in the alphabet
-     * @param alphabet The 2D char array of the enlgish alphabet from a - Z
+     * @param alphabet The string containing all letters in English Alphabet
      * @return true if character is in alphabet, false otherwise
      */
-    public static boolean inAlph(char letter, char[][] alphabet){
-        boolean posCharacter = false;
+    public static boolean inAlph(char letter, String alphabet){
         // Checks if the character is in the alphabet array
-        for(char[] x : alphabet){
-            for(char z : x){
-                if(letter == z){
-                    return posCharacter = true;
-                }
-            }
+        if(alphabet.contains("" + letter)){
+            return true;
         }
-        return posCharacter;
+        return false;
     }
 }
